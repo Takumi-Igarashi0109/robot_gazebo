@@ -1,5 +1,6 @@
 <launch>
-    <arg name="world_file"  default="$(find amsl_gazebo_worlds)/worlds/ikuta_building_d_1f.world"/>
+    <!-- <arg name="world_file"  default="$(find amsl_gazebo_worlds)/worlds/ikuta_building_d_1f.world"/> -->
+    <arg name="world_file"  default="$(find robot_gazebo)/worlds/empty.world"/>
 
     <arg name="base"         value="$(optenv ROBOT_BASE kobuki)"/> <!-- create, roomba -->
     <arg name="battery"      value="$(optenv ROBOT_BATTERY /proc/acpi/battery/BAT0)"/>  <!-- /proc/acpi/battery/BAT0 -->
@@ -114,15 +115,7 @@
     </group>
 
     <!-- Pointcloud Merge -->
-    <node pkg="localmap_creator" type="pc_merger" name="pc_merger" output="screen">
-        <param name="hz" value="50"/>
-        <param name="cloud_num" value="2"/>
-        <param name="cloud_count_th" value="2"/>
-        <param name="target_frame" value="map"/>
-        <remap from="/cloud0" to="/$(arg robot_1)/velodyne_obstacles/transformed"/>
-        <remap from="/cloud1" to="/$(arg robot_2)/velodyne_obstacles/transformed"/>
-        <remap from="/cloud" to="/merged_velodyne"/>
-    </node>
+    <include file="$(find robot_gazebo)/launch/pcl/concat.launch"/>
 
     <node pkg="rviz" type="rviz" name="rviz" args="-d $(find robot_gazebo)/rviz/multi_robot.rviz"/>
 
