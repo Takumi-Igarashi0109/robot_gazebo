@@ -1,0 +1,99 @@
+<launch>
+    <arg name="pose_initial_x4" default="4.0"/>
+    <arg name="pose_initial_y4" default="4.0"/>
+    <arg name="pose_initial_x5" default="5.0"/>
+    <arg name="pose_initial_y5" default="5.0"/>
+    <arg name="pose_initial_theta" default="0.0"/>
+    
+    <arg name="base"         value="$(optenv ROBOT_BASE kobuki)"/> <!-- create, roomba -->
+    <arg name="stacks"       value="$(optenv ROBOT_STACKS hexagons)"/>  <!-- circles, hexagons -->
+    <arg name="laser_sensor" value="$(optenv ROBOT_LASER_SENSOR realsense)"/>  <!-- laser, hokuyo lidar -->
+    <arg name="3d_sensor"    value="$(optenv TURTLEBOT_3D_SENSOR kinect)"/>  <!-- kinect, asus_xtion_pro -->
+
+    <arg name="robot_4"  default="camera_1"/>
+    <arg name="robot_5" default="camera_2"/>
+    <arg name="robot_6"  default="camera_3"/>
+
+    <group ns = "$(arg robot_4)">
+        <node pkg="tf" type="static_transform_publisher" name="gazebo_map_broadcaster" args="0 0 0 0 0 0 $(arg robot_4)/odom $(arg robot_4)/base_footprint 10"/> 
+        
+        <!-- tf odom to map -->
+        <node name="odom_tf_converter" pkg="robot_gazebo" type="odom_tf_converter">
+            <param name="pfi" value="/map"/>
+            <param name="cfi" value="/$(arg robot_4)/odom"/>
+            <remap from="/tracker" to="/$(arg robot_4)/tracker"/>
+        </node>
+
+        <include file="$(find robot_gazebo)/launch/includes/$(arg base)_$(arg laser_sensor).launch.xml">
+            <arg name="base" value="$(arg base)"/>
+            <arg name="stacks" value="$(arg stacks)"/>
+            <arg name="3d_sensor" value="$(arg 3d_sensor)"/>
+            <arg name="laser_sensor" value="$(arg laser_sensor)"/>
+            <arg name="initial_pose" value="-x $(arg pose_initial_x4) -y $(arg pose_initial_y4) -z $(arg pose_initial_theta)"/>
+            <arg name="mobile_base" default="$(arg robot_4)"/>
+            <arg name="name" default="$(arg robot_4)"/>
+            <!-- <arg name="topic_ns" default="$(arg robot_4)/camera"/> -->
+            
+            <remap from="/camera/depth/color/points" to="/$(arg robot_4)/realsense_points"/>
+            <remap from="tracker" to="/$(arg robot_4)/tracker"/>
+
+        </include>
+
+        <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+            <param name="publish_frequency" type="double" value="100.0" />
+            <param name="tf_prefix" value="$(arg robot_4)" />
+        </node>
+
+        <!-- <node pkg="robot_gazebo" type="pointcloud_tf_changer_node" name="pointcloud_tf_changer">
+            <param name="target_frame" value="map"/>
+            <remap from="/velodyne_obstacles" to="/$(arg robot_4)/velodyne_obstacles"/>
+        </node> -->
+
+        <!-- Save velodyen_pointcloud to pcd -->
+        <!-- <include file="$(find robot_gazebo)/launch/pcd_saver.launch">
+            <arg name="robot" value="$(arg robot_4)"/>
+        </include> -->
+
+    </group>
+
+    <group ns = "$(arg robot_5)">
+        <node pkg="tf" type="static_transform_publisher" name="gazebo_map_broadcaster" args="0 0 0 0 0 0 $(arg robot_5)/odom $(arg robot_5)/base_footprint 10"/>
+        
+        <node name="odom_tf_converter" pkg="robot_gazebo" type="odom_tf_converter">
+            <param name="pfi" value="/map"/>
+            <param name="cfi" value="/$(arg robot_5)/odom"/>
+            <remap from="/tracker" to="/$(arg robot_5)/tracker"/>
+        </node>
+
+        <include file="$(find robot_gazebo)/launch/includes/$(arg base)_$(arg laser_sensor).launch.xml">
+            <arg name="base" value="$(arg base)"/>
+            <arg name="stacks" value="$(arg stacks)"/>
+            <arg name="3d_sensor" value="$(arg 3d_sensor)"/>
+            <arg name="laser_sensor" value="$(arg laser_sensor)"/>
+            <arg name="initial_pose" value="-x $(arg pose_initial_x5) -y $(arg pose_initial_y5) -z $(arg pose_initial_theta)"/>
+            <arg name="mobile_base" default="$(arg robot_5)"/>
+            <arg name="name" default="$(arg robot_5)/"/>
+            <!-- <arg name="topic_ns" default="$(arg robot_5)/camera"/> -->
+
+            <!-- <remap from="velodyne_points" to="/$(arg robot_5)/velodyne_points"/> -->
+            <remap from="/camera/depth/color/points" to="/$(arg robot_5)/realsense_points"/>
+            <remap from="tracker" to="/$(arg robot_5)/tracker"/>
+        
+        </include>
+
+        <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+            <param name="publish_frequency" type="double" value="100.0" />
+            <param name="tf_prefix" value="$(arg robot_5)" />
+        </node>
+        
+        <!-- <node pkg="robot_gazebo" type="pointcloud_tf_changer_node" name="pointcloud_tf_changer">
+            <param name="target_frame" value="map"/>
+            <remap from="/velodyne_obstacles" to="/$(arg robot_5)/velodyne_obstacles"/>
+        </node> -->
+        
+        <!-- <include file="$(find robot_gazebo)/launch/pcd_saver.launch">
+            <arg name="robot" value="$(arg robot_5)"/>
+        </include> -->
+    </group>
+
+</launch>

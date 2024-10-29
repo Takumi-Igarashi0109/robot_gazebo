@@ -116,6 +116,9 @@
 
     <!-- Pointcloud Merge -->
     <include file="$(find robot_gazebo)/launch/pcl/concat.launch"/>
+    
+    <!--   spawn realsense   -->
+    <include file="$(find robot_gazebo)/launch/spawn_realsense.launch"/>
 
     <node pkg="rviz" type="rviz" name="rviz" args="-d $(find robot_gazebo)/rviz/multi_robot.rviz"/>
 
