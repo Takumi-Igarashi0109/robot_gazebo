@@ -6,7 +6,7 @@
   <!-- <arg name="cloud_in2" default="/camera_up/depth/points" /> -->
   <!-- <arg name="cloud_in3" default="/camera_down/depth/points" /> -->
   <!-- <arg name="cloud_in4" default="/pointcloud4" /> -->
-  <arg name="cloud_out" default="cloud_concatenated" />
+  <arg name="cloud_out" default="/cloud/dynamic"/>
 
   <!-- Launch PointCloud2 concatenator node -->
   <node pkg="pointcloud_concatenate" type="pointcloud_concatenate_node" name="pc_concat" output="screen">

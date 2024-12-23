@@ -47,10 +47,11 @@
             <arg name="initial_pose" value="-x $(arg pose_initial_x1) -y $(arg pose_initial_y1) -z $(arg pose_initial_theta)"/>
             <arg name="mobile_base" default="mobile_base1"/>
             
-            <remap from="velodyne_points" to="/$(arg robot_1)/velodyne_points"/>
-            <remap from="tracker" to="/$(arg robot_1)/tracker"/>
-
+            
         </include>
+        <remap from="velodyne_points" to="/$(arg robot_1)/velodyne_points"/>
+        <remap from="tracker" to="/$(arg robot_1)/tracker"/>
+
 
         <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
             <param name="publish_frequency" type="double" value="100.0" />
@@ -59,8 +60,9 @@
 
         <node pkg="robot_gazebo" type="pointcloud_tf_changer_node" name="pointcloud_tf_changer">
             <param name="target_frame" value="map"/>
-            <remap from="/velodyne_obstacles" to="/$(arg robot_1)/velodyne_obstacles"/>
+            
         </node>
+        <remap from="/velodyne_obstacles" to="/$(arg robot_1)/velodyne_obstacles"/>
 
         <!-- Save velodyen_pointcloud to pcd -->
         <!-- <include file="$(find robot_gazebo)/launch/pcd_saver.launch">
@@ -69,7 +71,11 @@
     
         <!-- Velodyen height map -->
         <include file="$(find velodyne_pointcloud)/launch/VLP-32C_points.launch"/>
-        <include file="$(find velodyne_height_map)/launch/amsl_velodyne_heightmap.launch"/>
+        <include file="$(find velodyne_height_map)/launch/amsl_velodyne_heightmap.launch">
+            <arg name="robot" value="$(arg robot_1)"/>
+            <arg name="input_topic" value="/$(arg robot_1)/velodyne_points"/>
+            <arg name="robot_name" value="$(arg robot_1)"/>
+        </include>
 
     </group>
 
@@ -90,10 +96,11 @@
             <arg name="initial_pose" value="-x $(arg pose_initial_x2) -y $(arg pose_initial_y2) -z $(arg pose_initial_theta)"/>
             <arg name="mobile_base" default="mobile_base2"/>
 
-            <remap from="velodyne_points" to="/$(arg robot_2)/velodyne_points"/>
-            <remap from="tracker" to="/$(arg robot_2)/tracker"/>
-        
+            
         </include>
+        <remap from="velodyne_points" to="/$(arg robot_2)/velodyne_points"/>
+        <remap from="tracker" to="/$(arg robot_2)/tracker"/>
+        
 
         <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
             <param name="publish_frequency" type="double" value="100.0" />
@@ -102,15 +109,20 @@
         
         <node pkg="robot_gazebo" type="pointcloud_tf_changer_node" name="pointcloud_tf_changer">
             <param name="target_frame" value="map"/>
-            <remap from="/velodyne_obstacles" to="/$(arg robot_2)/velodyne_obstacles"/>
+            
         </node>
+        <remap from="/velodyne_obstacles" to="/$(arg robot_2)/velodyne_obstacles"/>
         
         <!-- <include file="$(find robot_gazebo)/launch/pcd_saver.launch">
             <arg name="robot" value="$(arg robot_2)"/>
         </include> -->
     
         <include file="$(find velodyne_pointcloud)/launch/VLP-32C_points.launch"/>
-        <include file="$(find velodyne_height_map)/launch/amsl_velodyne_heightmap.launch"/>
+        <include file="$(find velodyne_height_map)/launch/amsl_velodyne_heightmap.launch">
+            <arg name="robot" value="$(arg robot_2)"/>
+            <arg name="input_topic" value="/$(arg robot_2)/velodyne_points"/>
+            <arg name="robot_name" value="$(arg robot_2)"/>
+        </include>
 
     </group>
 

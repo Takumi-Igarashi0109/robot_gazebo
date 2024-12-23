@@ -11,6 +11,7 @@
   <xacro:include filename="$(find robot_gazebo)/urdf/stacks/hexagons.urdf.xacro"/>
   <xacro:include filename="$(find robot_gazebo)/urdf/sensors/HDL-32E.urdf.xacro"/>
   <xacro:include filename="$(find robot_gazebo)/urdf/sensors/kinect.urdf.xacro"/>
+  <xacro:include filename="$(find robot_gazebo)/urdf/sensors/imu_sensor.urdf.xacro"/>
 
   <xacro:include filename="$(find robot_gazebo)/urdf/turtlebot_gazebo.urdf.xacro" />
 
@@ -23,4 +24,6 @@
   </xacro:HDL-32E>
 
   <xacro:sensor_kinect  parent="base_link"/>
+
+  <xacro:imu_sensor parent="base_link"/>
 </robot>

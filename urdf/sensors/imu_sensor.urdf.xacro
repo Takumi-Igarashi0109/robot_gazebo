@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<robot name="imu_sensor" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:property name="imu_size" value="0.02"/>
+  <xacro:macro name="imu_sensor" params="parent">
+    <!-- IMUのリンクとジョイントの定義 -->
+    <joint name="imu_joint" type="fixed">
+      <origin xyz="0 0 0.2" rpy="0 0 0"/>
+      <parent link="${parent}"/>
+      <child link="imu_link"/>
+    </joint>
+
+    <link name="imu_link">
+      <visual>
+        <geometry>
+          <box size="${imu_size} ${imu_size} 0.05"/>
+        </geometry>
+      </visual>
+      <collision>
+        <geometry>
+          <box size="${imu_size} ${imu_size} 0.05"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="1e-5"/>
+        <origin xyz="0.5 0 0" rpy="0 0 0"/>  <!-- IMUのリンクの位置を変更 -->
+        <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/>
+      </inertial>
+    </link>
+
+    <!-- Gazeboプラグインの設定 -->
+    <gazebo reference="imu_link">
+      <gravity>true</gravity>
+      <sensor name="imu_sensor" type="imu">
+        <always_on>true</always_on>
+        <update_rate>100</update_rate>
+        <visualize>true</visualize>
+        <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_sensor_plugin">
+          <topicName>imu</topicName>
+          <bodyName>imu_link</bodyName>
+          <updateRateHZ>100.0</updateRateHZ>
+          <gaussianNoise>0.0</gaussianNoise>
+          <xyzOffset>0 0 0</xyzOffset>
+          <rpyOffset>0 0 0</rpyOffset>
+          <frameName>imu_link</frameName>
+        </plugin>
+        <pose>0.5 0 0 0 0 0</pose>  <!-- IMUセンサーの位置を変更 -->
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+
+</robot>
