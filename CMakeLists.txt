@@ -25,11 +25,25 @@ include_directories(
 
 add_executable(odom_tf_converter src/odom_tf_converter.cpp)
 add_executable(pointcloud_tf_changer_node src/pointcloud_tf_changer.cpp)
+add_executable(odom_frame_modifier src/odom_frame_modifier.cpp)
+add_executable(odom_frame_modifier_test src/odom_frame_modifier_test.cpp)
+add_executable(imu_frame_modifier src/imu_frame_modifier.cpp)
+
+
 
 target_link_libraries(odom_tf_converter
   ${catkin_LIBRARIES}
 )
 target_link_libraries(pointcloud_tf_changer_node
+  ${catkin_LIBRARIES}
+)
+target_link_libraries(odom_frame_modifier 
+  ${catkin_LIBRARIES}
+)
+target_link_libraries(odom_frame_modifier_test
+  ${catkin_LIBRARIES}
+)
+target_link_libraries(imu_frame_modifier
   ${catkin_LIBRARIES}
 )
 
